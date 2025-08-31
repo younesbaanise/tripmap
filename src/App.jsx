@@ -46,7 +46,7 @@ const App = () => {
             
             {/* Protected route */}
             <Route 
-              path="/Trips" 
+              path="/trips" 
               element={
                 <PrivateRoute>
                   <Trips />
