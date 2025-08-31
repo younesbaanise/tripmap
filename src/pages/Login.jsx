@@ -1,44 +1,56 @@
-import { useState, useEffect } from "react";
-import {
-  signInWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { auth } from "../services/firebase";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router";
-import { useAuth } from "../contexts/AuthContext";
+import { useState, useEffect } from 'react';
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { auth } from '../services/firebase';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Redirect if already authenticated and email verified
-  useEffect(() => {
-    if (user && user.emailVerified) {
-      navigate("/trips");
-    }
-  }, [user, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
+  };
+
+  const validateForm = () => {
+    // Check if fields are empty
+    if (!formData.email || !formData.password) {
+      toast.error('Please enter valid data.');
+      return false;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address.');
+      return false;
+    }
+
+    // Check password length
+    if (formData.password.length < 8) {
+      toast.error('Password must be at least 8 characters.');
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Check if fields are empty
-    if (!formData.email || !formData.password) {
-      toast.error("Please enter valid data.");
+    
+    if (!validateForm()) {
       return;
     }
 
@@ -53,28 +65,26 @@ const Login = () => {
 
       // Check if email is verified
       if (!userCredential.user.emailVerified) {
-        toast.error("Please verify your email.");
+        toast.error('Please verify your email.');
         setLoading(false);
         return;
       }
 
       // Success - wait a moment for auth state to update
-      toast.success("Login successful!");
-
+      toast.success('Login successful!');
+      
       // Use setTimeout to ensure the auth state has time to update
       setTimeout(() => {
-        navigate("/trips");
+        navigate('/trips', { replace: true });
       }, 100);
+
     } catch (error) {
-      if (
-        error.code === "auth/user-not-found" ||
-        error.code === "auth/wrong-password"
-      ) {
-        toast.error("Invalid email or password.");
-      } else if (error.code === "auth/user-disabled") {
-        toast.error("This account has been disabled.");
+      if (error.code === 'auth/invalid-credential') {
+        toast.error('Invalid email or password.');
+      } else if (error.code === 'auth/user-disabled') {
+        toast.error('This account has been disabled.');
       } else {
-        toast.error("An error occurred during login. Please try again.");
+        toast.error('An error occurred during login. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -83,7 +93,7 @@ const Login = () => {
 
   const handleResendVerification = async () => {
     if (!user) {
-      toast.error("No user found. Please sign up first.");
+      toast.error('No user found. Please sign up first.');
       return;
     }
 
@@ -91,10 +101,9 @@ const Login = () => {
 
     try {
       await sendEmailVerification(user);
-      toast.success("Verification email sent! Check your inbox.");
+      toast.success('Verification email sent! Check your inbox.');
     } catch (error) {
-      console.error("Resend verification error:", error);
-      toast.error("Failed to send verification email. Please try again.");
+      toast.error('Failed to send verification email. Please try again.');
     } finally {
       setResendLoading(false);
     }
@@ -108,7 +117,7 @@ const Login = () => {
             Sign in to your account
           </h2>
         </div>
-
+        
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -151,14 +160,14 @@ const Login = () => {
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
 
           <div className="text-center">
             <button
               type="button"
-              onClick={() => navigate("/forget-password")}
+              onClick={() => navigate('/forget-password')}
               className="text-sm text-indigo-600 hover:text-indigo-500"
             >
               Forgot your password?
@@ -174,17 +183,17 @@ const Login = () => {
                 disabled={resendLoading}
                 className="text-sm text-indigo-600 hover:text-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {resendLoading ? "Sending..." : "Resend verification email"}
+                {resendLoading ? 'Sending...' : 'Resend verification email'}
               </button>
             </div>
           )}
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
+              Don't have an account?{' '}
               <button
                 type="button"
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate('/signup')}
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Sign up
