@@ -107,10 +107,10 @@ const MapPage = () => {
         lat: tripsWithCoordinates[0].lat, 
         lng: tripsWithCoordinates[0].lng 
       }
-    : defaultCenter;
+    : { lat: 20, lng: 0 }; // Show more of the world when no trips
 
   // Determine appropriate zoom level
-  const mapZoom = tripsWithCoordinates.length > 0 ? 4 : defaultZoom;
+  const mapZoom = tripsWithCoordinates.length > 0 ? 4 : 2;
 
   const handleOpenModal = (trip) => {
     setSelectedTrip(trip);
@@ -158,14 +158,20 @@ const MapPage = () => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Trip Map</h1>
-            <p className="text-gray-600 mt-2">
-              {tripsWithCoordinates.length} trip{tripsWithCoordinates.length !== 1 ? 's' : ''} with coordinates
-              {trips.length > tripsWithCoordinates.length && (
-                <span className="text-gray-400 ml-2">
-                  ({trips.length - tripsWithCoordinates.length} without coordinates)
-                </span>
-              )}
-            </p>
+                         <p className="text-gray-600 mt-2">
+               {tripsWithCoordinates.length === 0 ? (
+                 "Ready to start mapping your adventures?"
+               ) : (
+                 <>
+                   {tripsWithCoordinates.length} trip{tripsWithCoordinates.length !== 1 ? 's' : ''} with coordinates
+                   {trips.length > tripsWithCoordinates.length && (
+                     <span className="text-gray-400 ml-2">
+                       ({trips.length - tripsWithCoordinates.length} without coordinates)
+                     </span>
+                   )}
+                 </>
+               )}
+             </p>
           </div>
           <div className="flex gap-4">
             <button
@@ -281,18 +287,42 @@ const MapPage = () => {
                  </Marker>
                ))}
               
-              {/* Show default marker only if no trips with coordinates */}
-              {tripsWithCoordinates.length === 0 && (
-                <Marker position={defaultCenter}>
-                  <Popup>
-                    World Center <br /> No trips with coordinates yet
-                  </Popup>
-                </Marker>
-              )}
-                         </MapContainer>
+                           </MapContainer>
            </div>
          </div>
        </div>
+       
+       {/* Empty State Message when no trips exist */}
+       {tripsWithCoordinates.length === 0 && (
+         <div className="mt-6 bg-white rounded-lg shadow-md p-8 text-center">
+           <div className="max-w-md mx-auto">
+             <svg className="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+             </svg>
+             <h3 className="text-lg font-medium text-gray-900 mb-2">
+               No trips on the map yet
+             </h3>
+             <p className="text-gray-600 mb-6">
+               Start your travel journey by adding your first trip! Each trip you create will appear as a marker on this map, helping you visualize your adventures around the world.
+             </p>
+             <div className="flex gap-3 justify-center">
+               <button
+                 onClick={() => navigate('/add-trip')}
+                 className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+               >
+                 Create Your First Trip
+               </button>
+               <button
+                 onClick={() => navigate('/trips')}
+                 className="bg-gray-600 text-white px-6 py-3 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium"
+               >
+                 View All Trips
+               </button>
+             </div>
+           </div>
+         </div>
+       )}
        
                {/* Trip Detail Modal */}
         <div style={{ zIndex: 9999 }}>
