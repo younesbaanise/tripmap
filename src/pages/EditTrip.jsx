@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useTrips } from '../contexts/TripContext';
 import { toast } from 'react-hot-toast';
+import CitySearchInput from '../components/CitySearchInput';
 
 const EditTrip = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const EditTrip = () => {
     image: null
   });
   
+  const [selectedCity, setSelectedCity] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [currentImageUrl, setCurrentImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -37,6 +39,15 @@ const EditTrip = () => {
         });
         setCurrentImageUrl(tripData.imageUrl || '');
         setImagePreview(tripData.imageUrl || '');
+        
+        // Set selected city if coordinates exist
+        if (tripData.lat && tripData.lng) {
+          setSelectedCity({
+            placeName: tripData.placeName,
+            lat: tripData.lat,
+            lng: tripData.lng
+          });
+        }
       } else {
         toast.error('Trip not found');
         navigate('/trips');
@@ -49,6 +60,14 @@ const EditTrip = () => {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleCitySelect = (city) => {
+    setSelectedCity(city);
+    setFormData(prev => ({
+      ...prev,
+      placeName: city.placeName
     }));
   };
 
@@ -95,6 +114,11 @@ const EditTrip = () => {
       return;
     }
     
+    if (!selectedCity) {
+      toast.error('Please select a valid city from the suggestions');
+      return;
+    }
+    
     if (!formData.startDate) {
       toast.error('Start date is required');
       return;
@@ -124,7 +148,9 @@ const EditTrip = () => {
         endDate: formData.endDate,
         status: formData.status,
         description: formData.description.trim(),
-        imageUrl
+        imageUrl,
+        lat: selectedCity.lat,
+        lng: selectedCity.lng
       };
 
       await updateTrip(tripId, updatedData);
@@ -167,14 +193,11 @@ const EditTrip = () => {
               <label htmlFor="placeName" className="block text-sm font-medium text-gray-700 mb-2">
                 Place Name *
               </label>
-              <input
-                type="text"
-                id="placeName"
-                name="placeName"
+              <CitySearchInput
                 value={formData.placeName}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter place name"
+                onChange={(value) => setFormData(prev => ({ ...prev, placeName: value }))}
+                onCitySelect={handleCitySelect}
+                placeholder="Search for a city..."
                 required
               />
             </div>
