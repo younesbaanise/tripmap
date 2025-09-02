@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router';
 import { useTrips } from '../contexts/TripContext';
 import { toast } from 'react-hot-toast';
 import CitySearchInput from '../components/CitySearchInput';
+import { 
+  FaPlus, 
+  FaMapMarkerAlt, 
+  FaCalendarAlt, 
+  FaRoute, 
+  FaEdit, 
+  FaImage, 
+  FaArrowLeft,
+  FaGlobeAmericas,
+  FaCamera
+} from "react-icons/fa";
 
 const AddTrip = () => {
   const navigate = useNavigate();
@@ -133,17 +144,46 @@ const AddTrip = () => {
   const isSubmitting = loading || uploading;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">Add New Trip</h1>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Place Name */}
+    <div className="min-h-screen bg-[#F6F5F3] py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        {/* Enhanced Header */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#00BFA6] to-[#8E6DE9] rounded-2xl">
+              <FaPlus className="w-8 h-8 text-white" />
+            </div>
             <div>
-              <label htmlFor="placeName" className="block text-sm font-medium text-gray-700 mb-2">
-                Place Name *
-              </label>
+              <h1 className="text-4xl font-bold text-[#2D2D34]">Add New Trip</h1>
+              <p className="text-lg text-[#6B6B70]">Plan your next adventure</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced Form Card */}
+        <div className="bg-white rounded-2xl shadow-xl border border-[#DADADA] overflow-hidden">
+          {/* Form Header */}
+          <div className="bg-gradient-to-r from-[#F6F5F3] to-white px-8 py-6 border-b border-[#DADADA]">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-[#2D2D34]">Trip Details</h2>
+              <button
+                onClick={() => navigate('/trips')}
+                className="flex items-center space-x-2 px-4 py-2 bg-[#F6F5F3] hover:bg-[#DADADA] text-[#6B6B70] hover:text-[#2D2D34] rounded-lg transition-all duration-200 cursor-pointer"
+              >
+                <FaArrowLeft className="w-4 h-4" />
+                <span>Back to Trips</span>
+              </button>
+            </div>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="p-8 space-y-8">
+            {/* Place Name Section */}
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#8E6DE9] rounded-lg">
+                  <FaMapMarkerAlt className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-[#2D2D34]">Destination</h3>
+              </div>
               <CitySearchInput
                 value={formData.placeName}
                 onChange={(value) => setFormData(prev => ({ ...prev, placeName: value }))}
@@ -153,113 +193,139 @@ const AddTrip = () => {
               />
             </div>
 
-            {/* Date Range */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-2">
-                  Start Date *
-                </label>
-                <input
-                  type="date"
-                  id="startDate"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+            {/* Date Range Section */}
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#00BFA6] rounded-lg">
+                  <FaCalendarAlt className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-[#2D2D34]">Trip Dates</h3>
               </div>
               
-              <div>
-                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-2">
-                  End Date *
-                </label>
-                <input
-                  type="date"
-                  id="endDate"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="startDate" className="block text-sm font-medium text-[#2D2D34] mb-2">
+                    Start Date *
+                  </label>
+                  <input
+                    type="date"
+                    id="startDate"
+                    name="startDate"
+                    value={formData.startDate}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-[#DADADA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFA6] focus:border-[#00BFA6] transition-all duration-200 text-[#2D2D34] bg-white"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="endDate" className="block text-sm font-medium text-[#2D2D34] mb-2">
+                    End Date *
+                  </label>
+                  <input
+                    type="date"
+                    id="endDate"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-[#DADADA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFA6] focus:border-[#00BFA6] transition-all duration-200 text-[#2D2D34] bg-white"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Status */}
-            <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
-                Status
-              </label>
+            {/* Status Section */}
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#FF5E5B] rounded-lg">
+                  <FaRoute className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-[#2D2D34]">Trip Status</h3>
+              </div>
+              
               <select
                 id="status"
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 border border-[#DADADA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:border-[#FF5E5B] transition-all duration-200 text-[#2D2D34] bg-white cursor-pointer"
               >
                 <option value="Future Trip">Future Trip</option>
                 <option value="Visited">Visited</option>
               </select>
             </div>
 
-            {/* Description */}
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
+            {/* Description Section */}
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#8E6DE9] rounded-lg">
+                  <FaEdit className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-[#2D2D34]">Description</h3>
+              </div>
+              
               <textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 rows="4"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter trip description"
+                className="w-full px-4 py-3 border border-[#DADADA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8E6DE9] focus:border-[#8E6DE9] transition-all duration-200 text-[#2D2D34] bg-white placeholder-[#6B6B70] resize-none"
+                placeholder="Share your travel plans, expectations, or memories..."
               />
             </div>
 
-            {/* Image Upload */}
-            <div>
-              <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
-                Trip Image
-              </label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              
-              {imagePreview && (
-                <div className="mt-2">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-32 h-32 object-cover rounded-md"
-                  />
+            {/* Image Upload Section */}
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#00BFA6] rounded-lg">
+                  <FaCamera className="w-5 h-5 text-white" />
                 </div>
-              )}
+                <h3 className="text-xl font-bold text-[#2D2D34]">Trip Image</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full px-4 py-3 border border-[#DADADA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFA6] focus:border-[#00BFA6] transition-all duration-200 text-[#2D2D34] bg-white cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#00BFA6] file:text-white hover:file:bg-[#00BFA6]/90"
+                />
+                
+                {imagePreview && (
+                  <div className="mt-4 p-4 bg-white rounded-lg border border-[#DADADA]">
+                    <p className="text-sm font-medium text-[#2D2D34] mb-3">Image Preview:</p>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-40 h-40 object-cover rounded-lg shadow-md"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="flex gap-4">
+            {/* Submit Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-[#DADADA]">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 flex items-center justify-center space-x-3 bg-[#FF5E5B] text-white py-4 px-6 rounded-xl hover:bg-[#FF5E5B]/90 focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium text-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
-                {isSubmitting ? 'Adding Trip...' : 'Add Trip'}
+                <FaPlus className="w-5 h-5" />
+                <span>{isSubmitting ? 'Adding Trip...' : 'Add Trip'}</span>
               </button>
               
               <button
                 type="button"
                 onClick={() => navigate('/trips')}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 flex items-center justify-center space-x-3 px-6 py-4 border border-[#DADADA] text-[#2D2D34] rounded-xl hover:bg-[#F6F5F3] focus:outline-none focus:ring-2 focus:ring-[#DADADA] transition-all duration-200 font-medium text-lg cursor-pointer"
               >
-                Cancel
+                <FaArrowLeft className="w-5 h-5" />
+                <span>Cancel</span>
               </button>
             </div>
           </form>
