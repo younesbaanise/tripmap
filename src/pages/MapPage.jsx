@@ -6,6 +6,25 @@ import TripDetailModal from '../components/TripDetailModal';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+// Add custom CSS to fix z-index issues
+const mapStyles = `
+  .map-container {
+    z-index: 1 !important;
+  }
+  .leaflet-container {
+    z-index: 1 !important;
+  }
+  .leaflet-popup {
+    z-index: 1000 !important;
+  }
+  .leaflet-popup-tip {
+    z-index: 1000 !important;
+  }
+  .leaflet-popup-content-wrapper {
+    z-index: 1000 !important;
+  }
+`;
+
 // Fix for default marker icons in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -67,6 +86,17 @@ const MapPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const defaultCenter = { lat: 0, lng: 0 };
   const defaultZoom = 2;
+
+  // Inject custom CSS to fix z-index issues
+  useEffect(() => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = mapStyles;
+    document.head.appendChild(styleElement);
+
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
 
   // Filter trips that have coordinates
   const tripsWithCoordinates = trips.filter(trip => trip.lat && trip.lng);
@@ -171,15 +201,16 @@ const MapPage = () => {
              </div>
            )}
            
-           <div 
-             className="w-full h-[600px] rounded-lg overflow-hidden"
-             style={{ height: '600px' }}
-           >
-                         <MapContainer
-               center={mapCenter}
-               zoom={mapZoom}
-               style={{ height: '100%', width: '100%' }}
-             >
+                       <div 
+              className="w-full h-[600px] rounded-lg overflow-hidden relative"
+              style={{ height: '600px', zIndex: 1 }}
+            >
+              <MapContainer
+                center={mapCenter}
+                zoom={mapZoom}
+                style={{ height: '100%', width: '100%' }}
+                className="map-container"
+              >
                <MapUpdater tripsWithCoordinates={tripsWithCoordinates} />
                <TileLayer
                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -263,12 +294,14 @@ const MapPage = () => {
          </div>
        </div>
        
-       {/* Trip Detail Modal */}
-       <TripDetailModal
-         trip={selectedTrip}
-         isOpen={isModalOpen}
-         onClose={handleCloseModal}
-       />
+               {/* Trip Detail Modal */}
+        <div style={{ zIndex: 9999 }}>
+          <TripDetailModal
+            trip={selectedTrip}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+          />
+        </div>
      </div>
    );
  };
