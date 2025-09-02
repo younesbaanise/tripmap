@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Trips from "./pages/Trips";
 import AddTrip from "./pages/AddTrip";
 import EditTrip from "./pages/EditTrip";
+import MapPage from "./pages/MapPage";
 import ForgetPassword from "./pages/ForgetPassword";
 
 const App = () => {
@@ -74,6 +75,15 @@ const App = () => {
                 element={
                   <PrivateRoute>
                     <EditTrip />
+                  </PrivateRoute>
+                }
+              />
+              
+              <Route
+                path="/map"
+                element={
+                  <PrivateRoute>
+                    <MapPage />
                   </PrivateRoute>
                 }
               />

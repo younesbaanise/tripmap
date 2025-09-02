@@ -90,6 +90,12 @@ const Trips = () => {
               Add New Trip
             </button>
             <button
+              onClick={() => navigate('/map')}
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              View Map
+            </button>
+            <button
               onClick={handleLogout}
               className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
