@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { extractCityName } from '../utils/placeUtils';
 
 const TripCard = ({ trip, onOpenModal }) => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ const TripCard = ({ trip, onOpenModal }) => {
         {/* Header */}
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-gray-900 truncate">
-            {trip.placeName}
+            {extractCityName(trip.placeName)}
           </h3>
           <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(trip.status)}`}>
             {trip.status}
