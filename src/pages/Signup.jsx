@@ -7,6 +7,17 @@ import {
 import { auth, googleProvider } from "../services/firebase";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { 
+  FaUser, 
+  FaEnvelope, 
+  FaLock, 
+  FaEye, 
+  FaEyeSlash, 
+  FaGlobeAmericas,
+  FaMapMarkedAlt,
+  FaCamera,
+  FaCalendarAlt
+} from "react-icons/fa";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +28,8 @@ const Signup = () => {
   });
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -119,7 +132,7 @@ const Signup = () => {
       const result = await signInWithPopup(auth, googleProvider);
 
       // Google accounts are automatically verified
-      toast.success("Signup successful! Welcome to our app.");
+      toast.success("Signup successful! Welcome to TripMap.");
 
       // Use setTimeout to ensure the auth state has time to update
       setTimeout(() => {
@@ -149,148 +162,241 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
+    <div className="min-h-screen bg-[#F6F5F3]">
+      <div className="flex min-h-screen">
+        {/* Left Side - Travel Illustration & App Info */}
+        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#00BFA6] via-[#8E6DE9] to-[#FF5E5B] text-white p-12 flex-col justify-center relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-20 left-20 w-32 h-32 bg-white rounded-full"></div>
+            <div className="absolute bottom-20 right-20 w-24 h-24 bg-white rounded-full"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full"></div>
+          </div>
+          
+          <div className="max-w-lg mx-auto text-center relative z-10">
+            {/* App Logo/Icon */}
+            <div className="mb-8">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6 border border-white/30">
+                <FaGlobeAmericas className="w-10 h-10 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold mb-4 text-white">TripMap</h1>
+            </div>
+            
+            {/* App Description */}
+            <p className="text-xl font-medium mb-8 text-white/90">
+              Share your travel memories & plan future trips
+            </p>
+            
+            {/* Feature Icons */}
+            <div className="grid grid-cols-3 gap-6 mb-8">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full mb-3 border border-white/30">
+                  <FaMapMarkedAlt className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-sm text-white/90">Map Your Trips</p>
+              </div>
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full mb-3 border border-white/30">
+                  <FaCamera className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-sm text-white/90">Share Memories</p>
+              </div>
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full mb-3 border border-white/30">
+                  <FaCalendarAlt className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-sm text-white/90">Plan Adventures</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                disabled={googleLoading}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                placeholder="Username"
-                value={formData.username}
-                onChange={handleInputChange}
-              />
+        {/* Right Side - Sign Up Form */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+          <div className="w-full max-w-md">
+            {/* Mobile Header */}
+            <div className="lg:hidden text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#00BFA6] to-[#8E6DE9] rounded-full mb-4">
+                <FaGlobeAmericas className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-[#2D2D34] mb-2">TripMap</h1>
+              <p className="text-[#6B6B70]">Share your travel memories & plan future trips</p>
             </div>
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                disabled={googleLoading}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                disabled={googleLoading}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="confirmPassword" className="sr-only">
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                disabled={googleLoading}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                placeholder="Confirm Password"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading || googleLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? "Creating account..." : "Sign up"}
-            </button>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
+            {/* Form Header */}
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-[#2D2D34] mb-2">
+                Start Your Journey
+              </h2>
+              <p className="text-[#6B6B70]">
+                Create an account to begin mapping your adventures
+              </p>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 text-gray-500">
-                Or continue with
-              </span>
-            </div>
-          </div>
 
-          <div>
-            <button
-              type="button"
-              onClick={handleGoogleSignUp}
-              disabled={googleLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            {/* Sign Up Form */}
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {/* Username Field */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaUser className="h-5 w-5 text-[#6B6B70]" />
+                </div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  disabled={googleLoading}
+                  className="block w-full pl-10 pr-3 py-3 border border-[#DADADA] rounded-lg placeholder-[#6B6B70] text-[#2D2D34] bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:border-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  placeholder="Full Name"
+                  value={formData.username}
+                  onChange={handleInputChange}
                 />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                />
-              </svg>
-              {googleLoading ? "Signing up..." : "Continue with Google"}
-            </button>
-          </div>
+              </div>
 
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{" "}
+              {/* Email Field */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaEnvelope className="h-5 w-5 text-[#6B6B70]" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  disabled={googleLoading}
+                  className="block w-full pl-10 pr-3 py-3 border border-[#DADADA] rounded-lg placeholder-[#6B6B70] text-[#2D2D34] bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:border-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  placeholder="Email Address"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              {/* Password Field */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaLock className="h-5 w-5 text-[#6B6B70]" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  disabled={googleLoading}
+                  className="block w-full pl-10 pr-12 py-3 border border-[#DADADA] rounded-lg placeholder-[#6B6B70] text-[#2D2D34] bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:border-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="h-5 w-5 text-[#6B6B70] hover:text-[#2D2D34] transition-colors" />
+                  ) : (
+                    <FaEye className="h-5 w-5 text-[#6B6B70] hover:text-[#2D2D34] transition-colors" />
+                  )}
+                </button>
+              </div>
+
+              {/* Confirm Password Field */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaLock className="h-5 w-5 text-[#6B6B70]" />
+                </div>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  disabled={googleLoading}
+                  className="block w-full pl-10 pr-12 py-3 border border-[#DADADA] rounded-lg placeholder-[#6B6B70] text-[#2D2D34] bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:border-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? (
+                    <FaEyeSlash className="h-5 w-5 text-[#6B6B70] hover:text-[#2D2D34] transition-colors" />
+                  ) : (
+                    <FaEye className="h-5 w-5 text-[#6B6B70] hover:text-[#2D2D34] transition-colors" />
+                  )}
+                </button>
+              </div>
+
+              {/* Sign Up Button */}
+              <button
+                type="submit"
+                disabled={loading || googleLoading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-[#FF5E5B] hover:bg-[#FF5E5B]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+              >
+                {loading ? "Creating account..." : "Create Account"}
+              </button>
+
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-[#DADADA]" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-[#F6F5F3] text-[#6B6B70]">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
+              {/* Google Sign Up Button */}
               <button
                 type="button"
-                onClick={() => navigate("/login")}
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+                onClick={handleGoogleSignUp}
+                disabled={googleLoading}
+                className="w-full flex justify-center items-center py-3 px-4 border border-[#DADADA] rounded-lg shadow-sm text-sm font-medium text-[#2D2D34] bg-white hover:bg-[#F6F5F3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02]"
               >
-                Sign in
+                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  />
+                </svg>
+                {googleLoading ? "Signing up..." : "Continue with Google"}
               </button>
-            </p>
+
+              {/* Login Link */}
+              <div className="text-center">
+                <p className="text-sm text-[#6B6B70]">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => navigate("/login")}
+                    className="font-medium text-[#FF5E5B] hover:text-[#FF5E5B]/80 transition-colors"
+                  >
+                    Sign in here
+                  </button>
+                </p>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
