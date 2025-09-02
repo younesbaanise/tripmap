@@ -106,68 +106,68 @@ const Trips = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/add-trip')}
-                className="flex items-center space-x-2 bg-[#FF5E5B] text-white px-4 py-2 rounded-lg hover:bg-[#FF5E5B]/90 transition-all duration-200 transform hover:scale-105 shadow-md"
-              >
-                <FaPlus className="w-4 h-4" />
-                <span>Add Trip</span>
-              </button>
-              <button
-                onClick={() => navigate('/map')}
-                className="flex items-center space-x-2 bg-[#00BFA6] text-white px-4 py-2 rounded-lg hover:bg-[#00BFA6]/90 transition-all duration-200 transform hover:scale-105 shadow-md"
-              >
-                <FaMap className="w-4 h-4" />
-                <span>View Map</span>
-              </button>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-4 py-2 border border-[#DADADA] text-[#2D2D34] rounded-lg hover:bg-[#F6F5F3] transition-all duration-200"
-              >
-                <FaSignOutAlt className="w-4 h-4" />
-                <span>Logout</span>
-              </button>
-            </div>
+                         <div className="hidden md:flex items-center space-x-4">
+               <button
+                 onClick={() => navigate('/add-trip')}
+                 className="flex items-center space-x-2 bg-[#FF5E5B] text-white px-4 py-2 rounded-lg hover:bg-[#FF5E5B]/90 transition-all duration-200 transform hover:scale-105 shadow-md cursor-pointer"
+               >
+                 <FaPlus className="w-4 h-4" />
+                 <span>Add Trip</span>
+               </button>
+               <button
+                 onClick={() => navigate('/map')}
+                 className="flex items-center space-x-2 bg-[#00BFA6] text-white px-4 py-2 rounded-lg hover:bg-[#00BFA6]/90 transition-all duration-200 transform hover:scale-105 shadow-md cursor-pointer"
+               >
+                 <FaMap className="w-4 h-4" />
+                 <span>View Map</span>
+               </button>
+               <button
+                 onClick={handleLogout}
+                 className="flex items-center space-x-2 px-4 py-2 border border-[#DADADA] text-[#2D2D34] rounded-lg hover:bg-[#F6F5F3] transition-all duration-200 cursor-pointer"
+               >
+                 <FaSignOutAlt className="w-4 h-4" />
+                 <span>Logout</span>
+               </button>
+             </div>
 
             {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-[#2D2D34] hover:text-[#6B6B70] focus:outline-none focus:text-[#6B6B70] transition-colors duration-200"
-              >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
+                         <div className="md:hidden">
+               <button
+                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                 className="text-[#2D2D34] hover:text-[#6B6B70] focus:outline-none focus:text-[#6B6B70] transition-colors duration-200 cursor-pointer"
+               >
+                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                 </svg>
+               </button>
+             </div>
           </div>
 
           {/* Mobile Navigation Menu */}
           {isMobileMenuOpen && (
             <div className="md:hidden py-4 border-t border-[#DADADA]">
               <div className="flex flex-col space-y-3">
-                <button
-                  onClick={() => navigate('/add-trip')}
-                  className="flex items-center space-x-3 bg-[#FF5E5B] text-white px-4 py-3 rounded-lg hover:bg-[#FF5E5B]/90 transition-colors"
-                >
-                  <FaPlus className="w-4 h-4" />
-                  <span>Add New Trip</span>
-                </button>
-                <button
-                  onClick={() => navigate('/map')}
-                  className="flex items-center space-x-3 bg-[#00BFA6] text-white px-4 py-3 rounded-lg hover:bg-[#00BFA6]/90 transition-colors"
-                >
-                  <FaMap className="w-4 h-4" />
-                  <span>View Map</span>
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center space-x-3 px-4 py-3 border border-[#DADADA] text-[#2D2D34] rounded-lg hover:bg-[#F6F5F3] transition-colors"
-                >
-                  <FaSignOutAlt className="w-4 h-4" />
-                  <span>Logout</span>
-                </button>
+                                 <button
+                   onClick={() => navigate('/add-trip')}
+                   className="flex items-center space-x-3 bg-[#FF5E5B] text-white px-4 py-3 rounded-lg hover:bg-[#FF5E5B]/90 transition-colors cursor-pointer"
+                 >
+                   <FaPlus className="w-4 h-4" />
+                   <span>Add New Trip</span>
+                 </button>
+                 <button
+                   onClick={() => navigate('/map')}
+                   className="flex items-center space-x-3 bg-[#00BFA6] text-white px-4 py-3 rounded-lg hover:bg-[#00BFA6]/90 transition-colors cursor-pointer"
+                 >
+                   <FaMap className="w-4 h-4" />
+                   <span>View Map</span>
+                 </button>
+                 <button
+                   onClick={handleLogout}
+                   className="flex items-center space-x-3 px-4 py-3 border border-[#DADADA] text-[#2D2D34] rounded-lg hover:bg-[#F6F5F3] transition-colors cursor-pointer"
+                 >
+                   <FaSignOutAlt className="w-4 h-4" />
+                   <span>Logout</span>
+                 </button>
               </div>
             </div>
           )}
@@ -233,7 +233,7 @@ const Trips = () => {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setStatusFilter('all')}
-                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 cursor-pointer ${
                   statusFilter === 'all'
                     ? 'bg-[#00BFA6] text-white shadow-lg'
                     : 'bg-[#F6F5F3] text-[#2D2D34] hover:bg-[#DADADA] border border-[#DADADA]'
@@ -243,7 +243,7 @@ const Trips = () => {
               </button>
               <button
                 onClick={() => setStatusFilter('Future Trip')}
-                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 cursor-pointer ${
                   statusFilter === 'Future Trip'
                     ? 'bg-[#8E6DE9] text-white shadow-lg'
                     : 'bg-[#F6F5F3] text-[#2D2D34] hover:bg-[#DADADA] border border-[#DADADA]'
@@ -253,7 +253,7 @@ const Trips = () => {
               </button>
               <button
                 onClick={() => setStatusFilter('Visited')}
-                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 cursor-pointer ${
                   statusFilter === 'Visited'
                     ? 'bg-[#FF5E5B] text-white shadow-lg'
                     : 'bg-[#F6F5F3] text-[#2D2D34] hover:bg-[#DADADA] border border-[#DADADA]'
@@ -284,7 +284,7 @@ const Trips = () => {
               {statusFilter === 'all' && (
                 <button
                   onClick={() => navigate('/add-trip')}
-                  className="bg-[#FF5E5B] text-white px-8 py-4 rounded-lg hover:bg-[#FF5E5B]/90 focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium text-lg"
+                  className="bg-[#FF5E5B] text-white px-8 py-4 rounded-lg hover:bg-[#FF5E5B]/90 focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium text-lg cursor-pointer"
                 >
                   Start Your First Adventure
                 </button>

@@ -164,7 +164,7 @@ const TripCard = ({ trip, onOpenModal }) => {
           
           <button
             onClick={handleEditClick}
-            className="flex items-center space-x-2 px-4 py-2 bg-[#8E6DE9] text-white rounded-lg hover:bg-[#8E6DE9]/90 focus:outline-none focus:ring-2 focus:ring-[#8E6DE9] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-md text-sm font-medium"
+            className="flex items-center space-x-2 px-4 py-2 bg-[#8E6DE9] text-white rounded-lg hover:bg-[#8E6DE9]/90 focus:outline-none focus:ring-2 focus:ring-[#8E6DE9] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-md text-sm font-medium cursor-pointer"
           >
             <FaEdit className="w-3 h-3" />
             <span>Edit</span>
