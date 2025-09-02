@@ -1,7 +1,8 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router';
 import { useTrips } from '../contexts/TripContext';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import TripDetailModal from '../components/TripDetailModal';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -43,9 +44,27 @@ const createCustomIcon = (status) => {
   });
 };
 
+// Component to update map bounds when trips change
+const MapUpdater = ({ tripsWithCoordinates }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (tripsWithCoordinates.length > 0) {
+      const bounds = L.latLngBounds(
+        tripsWithCoordinates.map(trip => [trip.lat, trip.lng])
+      );
+      map.fitBounds(bounds, { padding: [20, 20] });
+    }
+  }, [tripsWithCoordinates, map]);
+  
+  return null;
+};
+
 const MapPage = () => {
   const navigate = useNavigate();
   const { trips, loading, error } = useTrips();
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const defaultCenter = { lat: 0, lng: 0 };
   const defaultZoom = 2;
 
@@ -62,6 +81,16 @@ const MapPage = () => {
 
   // Determine appropriate zoom level
   const mapZoom = tripsWithCoordinates.length > 0 ? 4 : defaultZoom;
+
+  const handleOpenModal = (trip) => {
+    setSelectedTrip(trip);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTrip(null);
+  };
 
   // Show loading state
   if (loading && trips.length === 0) {
@@ -124,20 +153,38 @@ const MapPage = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-lg shadow-md p-4">
-          <div 
-            className="w-full h-[600px] rounded-lg overflow-hidden"
-            style={{ height: '600px' }}
-          >
-            <MapContainer
-              center={mapCenter}
-              zoom={mapZoom}
-              style={{ height: '100%', width: '100%' }}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
+                 <div className="bg-white rounded-lg shadow-md p-4">
+           {/* Map Legend */}
+           {tripsWithCoordinates.length > 0 && (
+             <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+               <h3 className="text-sm font-medium text-gray-700 mb-2">Map Legend</h3>
+               <div className="flex gap-4 text-xs">
+                 <div className="flex items-center gap-2">
+                   <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                   <span className="text-gray-600">Visited Trips</span>
+                 </div>
+                 <div className="flex items-center gap-2">
+                   <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-sm"></div>
+                   <span className="text-gray-600">Future Trips</span>
+                 </div>
+               </div>
+             </div>
+           )}
+           
+           <div 
+             className="w-full h-[600px] rounded-lg overflow-hidden"
+             style={{ height: '600px' }}
+           >
+                         <MapContainer
+               center={mapCenter}
+               zoom={mapZoom}
+               style={{ height: '100%', width: '100%' }}
+             >
+               <MapUpdater tripsWithCoordinates={tripsWithCoordinates} />
+               <TileLayer
+                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+               />
               
                              {/* Render trip markers */}
                {tripsWithCoordinates.map((trip) => (
@@ -146,78 +193,60 @@ const MapPage = () => {
                    position={{ lat: trip.lat, lng: trip.lng }}
                    icon={createCustomIcon(trip.status)}
                  >
-                   <Popup className="trip-popup">
-                     <div className="min-w-[250px] max-w-[300px]">
-                       {/* Trip Image */}
-                       {trip.imageUrl && (
-                         <div className="mb-3">
-                           <img 
-                             src={trip.imageUrl} 
-                             alt={trip.placeName}
-                             className="w-full h-32 object-cover rounded-lg"
-                             onError={(e) => {
-                               e.target.style.display = 'none';
-                             }}
-                           />
-                         </div>
-                       )}
-                       
-                       {/* Trip Title */}
-                       <h3 className="font-bold text-lg text-gray-900 mb-2 text-center">
-                         {trip.placeName}
-                       </h3>
-                       
-                       {/* Status Badge */}
-                       <div className="flex justify-center mb-3">
-                         <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                           trip.status === 'Visited' 
-                             ? 'bg-green-100 text-green-800' 
-                             : 'bg-blue-100 text-blue-800'
-                         }`}>
-                           {trip.status}
-                         </span>
-                       </div>
-                       
-                       {/* Trip Details */}
-                       <div className="space-y-2 text-sm text-gray-700">
-                         <div className="flex items-center gap-2">
-                           <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                           </svg>
-                           <span>
-                             <strong>Dates:</strong> {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
-                           </span>
-                         </div>
-                         
-                         {trip.description && (
-                           <div className="flex items-start gap-2">
-                             <svg className="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                             </svg>
-                             <span>
-                               <strong>Description:</strong> {trip.description}
-                             </span>
-                           </div>
-                         )}
-                       </div>
-                       
-                       {/* Action Buttons */}
-                       <div className="flex gap-2 mt-4 pt-3 border-t border-gray-200">
-                         <button
-                           onClick={() => navigate(`/edit-trip/${trip.id}`)}
-                           className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-md hover:bg-blue-700 text-sm font-medium transition-colors"
-                         >
-                           Edit Trip
-                         </button>
-                         <button
-                           onClick={() => navigate('/trips')}
-                           className="flex-1 bg-gray-600 text-white py-2 px-3 rounded-md hover:bg-gray-700 text-sm font-medium transition-colors"
-                         >
-                           View Details
-                         </button>
-                       </div>
-                     </div>
-                   </Popup>
+                                       <Popup className="trip-popup">
+                      <div className="min-w-[200px] max-w-[250px]">
+                        {/* Trip Image */}
+                        {trip.imageUrl && (
+                          <div className="mb-3">
+                            <img 
+                              src={trip.imageUrl} 
+                              alt={trip.placeName}
+                              className="w-full h-24 object-cover rounded-lg"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Trip Title */}
+                        <h3 className="font-semibold text-sm text-gray-900 mb-2 text-center">
+                          {trip.placeName}
+                        </h3>
+                        
+                        {/* Status Badge */}
+                        <div className="flex justify-center mb-2">
+                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            trip.status === 'Visited' 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-blue-100 text-blue-800'
+                          }`}>
+                            {trip.status}
+                          </span>
+                        </div>
+                        
+                        {/* Trip Dates */}
+                        <div className="text-xs text-gray-600 text-center mb-3">
+                          {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
+                        </div>
+                        
+                        {/* Action Buttons */}
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => navigate(`/edit-trip/${trip.id}`)}
+                            className="flex-1 bg-blue-600 text-white py-1.5 px-2 rounded text-xs font-medium hover:bg-blue-700 transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleOpenModal(trip)}
+                            className="flex-1 bg-gray-600 text-white py-1.5 px-2 rounded text-xs font-medium hover:bg-gray-700 transition-colors"
+                          >
+                            Details
+                          </button>
+                        </div>
+                      </div>
+                    </Popup>
                  </Marker>
                ))}
               
@@ -229,12 +258,19 @@ const MapPage = () => {
                   </Popup>
                 </Marker>
               )}
-            </MapContainer>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+                         </MapContainer>
+           </div>
+         </div>
+       </div>
+       
+       {/* Trip Detail Modal */}
+       <TripDetailModal
+         trip={selectedTrip}
+         isOpen={isModalOpen}
+         onClose={handleCloseModal}
+       />
+     </div>
+   );
+ };
 
 export default MapPage;
