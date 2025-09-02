@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router';
 import { useTrips } from '../contexts/TripContext';
 import { toast } from 'react-hot-toast';
 import { extractCityName } from '../utils/placeUtils';
+import { 
+  FaTimes, 
+  FaMapMarkerAlt, 
+  FaCalendarAlt, 
+  FaClock, 
+  FaEdit, 
+  FaTrash, 
+  FaImage,
+  FaGlobeAmericas,
+  FaRoute
+} from "react-icons/fa";
 
 const TripDetailModal = ({ trip, isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -40,10 +51,34 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
   };
 
   const getStatusColor = (status) => {
-    return status === 'Visited' 
-      ? 'bg-green-100 text-green-800' 
-      : 'bg-blue-100 text-blue-800';
+    if (status === 'Visited') {
+      return {
+        bg: 'bg-[#00BFA6]',
+        text: 'text-white',
+        border: 'border-[#00BFA6]'
+      };
+    } else {
+      return {
+        bg: 'bg-[#8E6DE9]',
+        text: 'text-white',
+        border: 'border-[#8E6DE9]'
+      };
+    }
   };
+
+  const calculateDuration = () => {
+    if (trip.startDate && trip.endDate) {
+      const start = new Date(trip.startDate);
+      const end = new Date(trip.endDate);
+      const diffTime = Math.abs(end - start);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+    return 0;
+  };
+
+  const statusColors = getStatusColor(trip.status);
+  const duration = calculateDuration();
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -53,120 +88,164 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
 
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">{extractCityName(trip.placeName)}</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-          >
-            ×
-          </button>
+      <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-[#DADADA] transform transition-all duration-300 scale-100">
+        {/* Enhanced Header */}
+        <div className="relative bg-gradient-to-r from-[#F6F5F3] to-white rounded-t-2xl p-6 border-b border-[#DADADA]">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#00BFA6] to-[#8E6DE9] rounded-xl">
+                  <FaGlobeAmericas className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold text-[#2D2D34]">{extractCityName(trip.placeName)}</h2>
+                  <p className="text-[#6B6B70] text-sm">Travel Adventure</p>
+                </div>
+              </div>
+              
+              {/* Status Badge */}
+              <div className="inline-block">
+                <span className={`px-4 py-2 text-sm font-semibold rounded-full shadow-lg ${statusColors.bg} ${statusColors.text}`}>
+                  {trip.status}
+                </span>
+              </div>
+            </div>
+            
+            <button
+              onClick={onClose}
+              className="flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-white text-[#6B6B70] hover:text-[#2D2D34] rounded-full shadow-lg transition-all duration-200 transform hover:scale-110 cursor-pointer"
+            >
+              <FaTimes className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Image */}
-          {trip.imageUrl && !imageError ? (
-            <div className="w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
-              <img
-                src={trip.imageUrl}
-                alt={trip.placeName}
-                className="w-full h-full object-cover"
-                onError={handleImageError}
-              />
-            </div>
-          ) : (
-            <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-              <svg className="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-          )}
-
-          {/* Status Badge */}
-          <div className="flex justify-center">
-            <span className={`px-4 py-2 text-sm font-medium rounded-full ${getStatusColor(trip.status)}`}>
-              {trip.status}
-            </span>
+        <div className="p-6 space-y-8">
+          {/* Enhanced Image Section */}
+          <div className="relative">
+            {trip.imageUrl && !imageError ? (
+              <div className="w-full h-80 bg-gradient-to-br from-[#F6F5F3] to-[#DADADA] rounded-xl overflow-hidden shadow-lg">
+                <img
+                  src={trip.imageUrl}
+                  alt={trip.placeName}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  onError={handleImageError}
+                />
+              </div>
+            ) : (
+              <div className="w-full h-80 bg-gradient-to-br from-[#F6F5F3] to-[#DADADA] rounded-xl flex flex-col items-center justify-center shadow-lg">
+                <FaImage className="w-24 h-24 text-[#6B6B70] opacity-50 mb-4" />
+                <p className="text-[#6B6B70] text-lg font-medium">No Image Available</p>
+              </div>
+            )}
           </div>
 
-          {/* Trip Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Trip Dates</h3>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-gray-700">
-                    <strong>Start:</strong> {formatDate(trip.startDate)}
-                  </span>
+          {/* Trip Details Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Trip Dates Section */}
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#00BFA6] rounded-lg">
+                  <FaCalendarAlt className="w-5 h-5 text-white" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-gray-700">
-                    <strong>End:</strong> {formatDate(trip.endDate)}
-                  </span>
+                <h3 className="text-xl font-bold text-[#2D2D34]">Trip Dates</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-[#DADADA]">
+                  <div className="flex items-center space-x-3">
+                    <FaRoute className="w-4 h-4 text-[#00BFA6]" />
+                    <span className="text-[#2D2D34] font-medium">Start Date</span>
+                  </div>
+                  <span className="text-[#6B6B70] font-semibold">{formatDate(trip.startDate)}</span>
                 </div>
+                
+                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-[#DADADA]">
+                  <div className="flex items-center space-x-3">
+                    <FaRoute className="w-4 h-4 text-[#8E6DE9]" />
+                    <span className="text-[#2D2D34] font-medium">End Date</span>
+                  </div>
+                  <span className="text-[#6B6B70] font-semibold">{formatDate(trip.endDate)}</span>
+                </div>
+                
+                {duration > 0 && (
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-[#00BFA6] to-[#8E6DE9] rounded-lg text-white">
+                    <div className="flex items-center space-x-3">
+                      <FaClock className="w-4 h-4" />
+                      <span className="font-medium">Duration</span>
+                    </div>
+                    <span className="font-bold">{duration} day{duration !== 1 ? 's' : ''}</span>
+                  </div>
+                )}
               </div>
             </div>
 
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Trip Info</h3>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span className="text-gray-700">
-                    <strong>Place:</strong> {trip.placeName}
-                  </span>
+            {/* Trip Info Section */}
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#8E6DE9] rounded-lg">
+                  <FaMapMarkerAlt className="w-5 h-5 text-white" />
                 </div>
+                <h3 className="text-xl font-bold text-[#2D2D34]">Trip Information</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-3 bg-white rounded-lg border border-[#DADADA]">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <FaMapMarkerAlt className="w-4 h-4 text-[#8E6DE9]" />
+                    <span className="text-[#2D2D34] font-medium">Destination</span>
+                  </div>
+                  <p className="text-[#6B6B70] text-sm leading-relaxed">{trip.placeName}</p>
+                </div>
+                
                 {trip.createdAt && (
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-gray-700">
-                      <strong>Created:</strong> {formatDate(trip.createdAt)}
-                    </span>
+                  <div className="p-3 bg-white rounded-lg border border-[#DADADA]">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <FaClock className="w-4 h-4 text-[#00BFA6]" />
+                      <span className="text-[#2D2D34] font-medium">Created</span>
+                    </div>
+                    <p className="text-[#6B6B70] text-sm">{formatDate(trip.createdAt)}</p>
                   </div>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Description */}
+          {/* Description Section */}
           {trip.description && (
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Description</h3>
-              <p className="text-gray-700 leading-relaxed">{trip.description}</p>
+            <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-[#FF5E5B] rounded-lg">
+                  <FaGlobeAmericas className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-[#2D2D34]">Description</h3>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-[#DADADA]">
+                <p className="text-[#6B6B70] leading-relaxed text-base">{trip.description}</p>
+              </div>
             </div>
           )}
 
-          {/* Actions */}
-          <div className="flex gap-4 pt-4 border-t border-gray-200">
+          {/* Enhanced Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-[#DADADA]">
             <button
               onClick={handleEdit}
-              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              className="flex-1 flex items-center justify-center space-x-3 bg-[#8E6DE9] text-white py-4 px-6 rounded-xl hover:bg-[#8E6DE9]/90 focus:outline-none focus:ring-2 focus:ring-[#8E6DE9] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium text-lg cursor-pointer"
             >
-              Edit Trip
+              <FaEdit className="w-5 h-5" />
+              <span>Edit Trip</span>
             </button>
             <button
               onClick={handleDelete}
               disabled={loading}
-              className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 flex items-center justify-center space-x-3 bg-[#FF5E5B] text-white py-4 px-6 rounded-xl hover:bg-[#FF5E5B]/90 focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium text-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {loading ? 'Deleting...' : 'Delete Trip'}
+              <FaTrash className="w-5 h-5" />
+              <span>{loading ? 'Deleting...' : 'Delete Trip'}</span>
             </button>
           </div>
         </div>

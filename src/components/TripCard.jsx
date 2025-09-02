@@ -1,13 +1,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { extractCityName } from '../utils/placeUtils';
+import { 
+  FaEdit, 
+  FaCalendarAlt, 
+  FaMapMarkerAlt, 
+  FaEye,
+  FaImage
+} from "react-icons/fa";
 
 const TripCard = ({ trip, onOpenModal }) => {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const handleImageError = () => {
     setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
   };
 
   const handleCardClick = () => {
@@ -28,76 +41,139 @@ const TripCard = ({ trip, onOpenModal }) => {
   };
 
   const getStatusColor = (status) => {
-    return status === 'Visited' 
-      ? 'bg-green-100 text-green-800' 
-      : 'bg-blue-100 text-blue-800';
+    if (status === 'Visited') {
+      return {
+        bg: 'bg-[#00BFA6]',
+        text: 'text-white',
+        border: 'border-[#00BFA6]'
+      };
+    } else {
+      return {
+        bg: 'bg-[#8E6DE9]',
+        text: 'text-white',
+        border: 'border-[#8E6DE9]'
+      };
+    }
   };
+
+  const statusColors = getStatusColor(trip.status);
 
   return (
     <div 
       onClick={handleCardClick}
-      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer border border-gray-200 overflow-hidden"
+      className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-[#DADADA] overflow-hidden transform hover:scale-[1.02] hover:-translate-y-1"
     >
-      {/* Image Section */}
-      <div className="h-48 bg-gray-200 overflow-hidden">
+      {/* Enhanced Image Section */}
+      <div className="relative h-56 bg-gradient-to-br from-[#F6F5F3] to-[#DADADA] overflow-hidden">
         {trip.imageUrl && !imageError ? (
-          <img
-            src={trip.imageUrl}
-            alt={trip.placeName}
-            className="w-full h-full object-cover"
-            onError={handleImageError}
-          />
+          <>
+            {/* Loading State */}
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-[#F6F5F3]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00BFA6]"></div>
+              </div>
+            )}
+            
+            {/* Image */}
+            <img
+              src={trip.imageUrl}
+              alt={trip.placeName}
+              className={`w-full h-full object-cover transition-opacity duration-300 ${
+                imageLoading ? 'opacity-0' : 'opacity-100'
+              }`}
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+            />
+            
+
+          </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+          <div className="w-full h-full flex flex-col items-center justify-center text-[#6B6B70]">
+            <FaImage className="w-16 h-16 mb-2 opacity-50" />
+            <p className="text-sm opacity-70">No Image</p>
           </div>
         )}
-      </div>
-
-      {/* Content Section */}
-      <div className="p-4">
-        {/* Header */}
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-900 truncate">
-            {extractCityName(trip.placeName)}
-          </h3>
-          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(trip.status)}`}>
+        
+        {/* Status Badge - Positioned on top right */}
+        <div className="absolute top-3 right-3">
+          <span className={`px-3 py-1.5 text-xs font-semibold rounded-full shadow-lg ${statusColors.bg} ${statusColors.text}`}>
             {trip.status}
           </span>
         </div>
+      </div>
 
-        {/* Dates */}
-        <div className="text-sm text-gray-600 mb-3">
-          <div className="flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span>{formatDate(trip.startDate)} - {formatDate(trip.endDate)}</span>
+      {/* Enhanced Content Section */}
+      <div className="p-5">
+        {/* Header with Place Name */}
+        <div className="mb-3">
+          <h3 className="text-xl font-bold text-[#2D2D34] mb-1 group-hover:text-[#00BFA6] transition-colors duration-200 line-clamp-1">
+            {extractCityName(trip.placeName)}
+          </h3>
+          <div className="flex items-center text-[#6B6B70] text-sm">
+            <FaMapMarkerAlt className="w-4 h-4 mr-2 text-[#8E6DE9]" />
+            <span className="line-clamp-1">{trip.placeName}</span>
           </div>
         </div>
 
-        {/* Description */}
+        {/* Dates Section */}
+        <div className="mb-4 p-3 bg-[#F6F5F3] rounded-lg border border-[#DADADA]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <FaCalendarAlt className="w-4 h-4 text-[#00BFA6]" />
+              <span className="text-sm font-medium text-[#2D2D34]">Duration</span>
+            </div>
+            <span className="text-xs text-[#6B6B70] bg-white px-2 py-1 rounded-full">
+              {trip.startDate && trip.endDate ? 
+                `${Math.ceil((new Date(trip.endDate) - new Date(trip.startDate)) / (1000 * 60 * 60 * 24))} days` : 
+                'N/A'
+              }
+            </span>
+          </div>
+          <div className="mt-2 text-sm text-[#2D2D34]">
+            <span className="font-medium">{formatDate(trip.startDate)}</span>
+            <span className="mx-2 text-[#6B6B70]">→</span>
+            <span className="font-medium">{formatDate(trip.endDate)}</span>
+          </div>
+        </div>
+
+        {/* Description Section - Handles different lengths gracefully */}
         {trip.description && (
-          <p className="text-sm text-gray-700 mb-4 line-clamp-2">
-            {trip.description}
-          </p>
+          <div className="mb-4">
+            <p className={`text-sm text-[#6B6B70] leading-relaxed ${
+              trip.description.length > 100 ? 'line-clamp-3' : 'line-clamp-2'
+            }`}>
+              {trip.description}
+            </p>
+            {trip.description.length > 100 && (
+              <div className="mt-2 text-xs text-[#00BFA6] font-medium">
+                Click to read more...
+              </div>
+            )}
+          </div>
         )}
 
-        {/* Actions */}
-        <div className="flex justify-end">
+        {/* Actions Section */}
+        <div className="flex justify-between items-center pt-3 border-t border-[#DADADA]">
+          <div className="text-xs text-[#6B6B70]">
+            Created {new Date(trip.createdAt).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </div>
+          
           <button
             onClick={handleEditClick}
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
+            className="flex items-center space-x-2 px-4 py-2 bg-[#8E6DE9] text-white rounded-lg hover:bg-[#8E6DE9]/90 focus:outline-none focus:ring-2 focus:ring-[#8E6DE9] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-md text-sm font-medium cursor-pointer"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            Edit
+            <FaEdit className="w-3 h-3" />
+            <span>Edit</span>
           </button>
         </div>
       </div>
+
+      {/* Hover Effect Border */}
+      <div className="absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-[#8E6DE9]/20 transition-all duration-300 pointer-events-none"></div>
     </div>
   );
 };
