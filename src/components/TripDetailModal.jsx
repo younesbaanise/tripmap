@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useTrips } from '../contexts/TripContext';
 import { toast } from 'react-hot-toast';
+import { extractCityName } from '../utils/placeUtils';
 
 const TripDetailModal = ({ trip, isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">{trip.placeName}</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{extractCityName(trip.placeName)}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
