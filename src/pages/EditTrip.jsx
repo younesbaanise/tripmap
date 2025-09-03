@@ -1,38 +1,37 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { useTrips } from '../contexts/TripContext';
-import { toast } from 'react-hot-toast';
-import CitySearchInput from '../components/CitySearchInput';
-import { 
-  FaEdit, 
-  FaMapMarkerAlt, 
-  FaCalendarAlt, 
-  FaRoute, 
-  FaPencilAlt, 
-  FaImage, 
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import { useTrips } from "../contexts/TripContext";
+import { toast } from "react-hot-toast";
+import CitySearchInput from "../components/CitySearchInput";
+import {
+  FaEdit,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaRoute,
+  FaPencilAlt,
+  FaImage,
   FaArrowLeft,
-  FaGlobeAmericas,
   FaCamera,
-  FaSave
+  FaSave,
 } from "react-icons/fa";
 
 const EditTrip = () => {
   const navigate = useNavigate();
   const { tripId } = useParams();
   const { getTrip, updateTrip, loading } = useTrips();
-  
+
   const [formData, setFormData] = useState({
-    placeName: '',
-    startDate: '',
-    endDate: '',
-    status: 'Future Trip',
-    description: '',
-    image: null
+    placeName: "",
+    startDate: "",
+    endDate: "",
+    status: "Future Trip",
+    description: "",
+    image: null,
   });
-  
+
   const [selectedCity, setSelectedCity] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
-  const [currentImageUrl, setCurrentImageUrl] = useState('');
+  const [imagePreview, setImagePreview] = useState("");
+  const [currentImageUrl, setCurrentImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [trip, setTrip] = useState(null);
 
@@ -42,52 +41,52 @@ const EditTrip = () => {
       if (tripData) {
         setTrip(tripData);
         setFormData({
-          placeName: tripData.placeName || '',
-          startDate: tripData.startDate || '',
-          endDate: tripData.endDate || '',
-          status: tripData.status || 'Future Trip',
-          description: tripData.description || '',
-          image: null
+          placeName: tripData.placeName || "",
+          startDate: tripData.startDate || "",
+          endDate: tripData.endDate || "",
+          status: tripData.status || "Future Trip",
+          description: tripData.description || "",
+          image: null,
         });
-        setCurrentImageUrl(tripData.imageUrl || '');
-        setImagePreview(tripData.imageUrl || '');
-        
+        setCurrentImageUrl(tripData.imageUrl || "");
+        setImagePreview(tripData.imageUrl || "");
+
         // Set selected city if coordinates exist
         if (tripData.lat && tripData.lng) {
           setSelectedCity({
             placeName: tripData.placeName,
             lat: tripData.lat,
-            lng: tripData.lng
+            lng: tripData.lng,
           });
         }
       } else {
-        toast.error('Trip not found');
-        navigate('/trips');
+        toast.error("Trip not found");
+        navigate("/trips");
       }
     }
   }, [tripId, getTrip, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleCitySelect = (city) => {
     setSelectedCity(city);
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      placeName: city.placeName
+      placeName: city.placeName,
     }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({ ...prev, image: file }));
-      
+      setFormData((prev) => ({ ...prev, image: file }));
+
       // Create preview
       const reader = new FileReader();
       reader.onload = () => setImagePreview(reader.result);
@@ -97,20 +96,25 @@ const EditTrip = () => {
 
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
-    formData.append('folder', import.meta.env.VITE_CLOUDINARY_FOLDER);
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+    );
+    formData.append("folder", import.meta.env.VITE_CLOUDINARY_FOLDER);
 
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${
+        import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+      }/image/upload`,
       {
-        method: 'POST',
+        method: "POST",
         body: formData,
       }
     );
 
     if (!response.ok) {
-      throw new Error('Failed to upload image');
+      throw new Error("Failed to upload image");
     }
 
     const data = await response.json();
@@ -119,36 +123,36 @@ const EditTrip = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validation
     if (!formData.placeName.trim()) {
-      toast.error('Place name is required');
+      toast.error("Place name is required");
       return;
     }
-    
+
     if (!selectedCity) {
-      toast.error('Please select a valid city from the suggestions');
+      toast.error("Please select a valid city from the suggestions");
       return;
     }
-    
+
     if (!formData.startDate) {
-      toast.error('Start date is required');
+      toast.error("Start date is required");
       return;
     }
-    
+
     if (!formData.endDate) {
-      toast.error('End date is required');
+      toast.error("End date is required");
       return;
     }
-    
+
     if (new Date(formData.startDate) > new Date(formData.endDate)) {
-      toast.error('End date must be after start date');
+      toast.error("End date must be after start date");
       return;
     }
 
     try {
       setUploading(true);
-      
+
       let imageUrl = currentImageUrl;
       if (formData.image) {
         imageUrl = await uploadToCloudinary(formData.image);
@@ -162,22 +166,22 @@ const EditTrip = () => {
         description: formData.description.trim(),
         imageUrl,
         lat: selectedCity.lat,
-        lng: selectedCity.lng
+        lng: selectedCity.lng,
       };
 
       await updateTrip(tripId, updatedData);
-      toast.success('Trip updated successfully!');
-      navigate('/trips');
+      toast.success("Trip updated successfully!");
+      navigate("/trips");
     } catch (error) {
-      console.error('Error updating trip:', error);
-      toast.error('Failed to update trip. Please try again.');
+      console.error("Error updating trip:", error);
+      toast.error("Failed to update trip. Please try again.");
     } finally {
       setUploading(false);
     }
   };
 
   const handleCancel = () => {
-    navigate('/trips');
+    navigate("/trips");
   };
 
   const isSubmitting = loading || uploading;
@@ -198,14 +202,24 @@ const EditTrip = () => {
       <div className="max-w-4xl mx-auto px-4">
         {/* Enhanced Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#8E6DE9] to-[#00BFA6] rounded-2xl">
-              <FaEdit className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-[#2D2D34]">Edit Trip</h1>
-              <p className="text-lg text-[#6B6B70]">Update your travel adventure</p>
-            </div>
+          {/* Mobile: Smaller title and subtitle */}
+          <div className="md:hidden mb-6">
+            <h1 className="text-3xl font-bold text-[#2D2D34] mb-3">
+              Edit Trip
+            </h1>
+            <p className="text-base text-[#6B6B70]">
+              Update your travel adventure
+            </p>
+          </div>
+
+          {/* Tablet and Desktop: Larger title and subtitle */}
+          <div className="hidden md:block mb-6">
+            <h1 className="text-4xl font-bold text-[#2D2D34] mb-3">
+              Edit Trip
+            </h1>
+            <p className="text-lg text-[#6B6B70]">
+              Update your travel adventure
+            </p>
           </div>
         </div>
 
@@ -214,9 +228,11 @@ const EditTrip = () => {
           {/* Form Header */}
           <div className="bg-gradient-to-r from-[#F6F5F3] to-white px-8 py-6 border-b border-[#DADADA]">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-[#2D2D34]">Update Trip Details</h2>
+              <h2 className="text-2xl font-bold text-[#2D2D34]">
+                Update Trip Details
+              </h2>
               <button
-                onClick={() => navigate('/trips')}
+                onClick={() => navigate("/trips")}
                 className="flex items-center space-x-2 px-4 py-2 bg-[#F6F5F3] hover:bg-[#DADADA] text-[#6B6B70] hover:text-[#2D2D34] rounded-lg transition-all duration-200 cursor-pointer"
               >
                 <FaArrowLeft className="w-4 h-4" />
@@ -224,7 +240,7 @@ const EditTrip = () => {
               </button>
             </div>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="p-8 space-y-8">
             {/* Place Name Section */}
             <div className="bg-[#F6F5F3] rounded-xl p-6 border border-[#DADADA]">
@@ -232,11 +248,15 @@ const EditTrip = () => {
                 <div className="flex items-center justify-center w-10 h-10 bg-[#8E6DE9] rounded-lg">
                   <FaMapMarkerAlt className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#2D2D34]">Destination</h3>
+                <h3 className="text-xl font-bold text-[#2D2D34]">
+                  Destination
+                </h3>
               </div>
               <CitySearchInput
                 value={formData.placeName}
-                onChange={(value) => setFormData(prev => ({ ...prev, placeName: value }))}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, placeName: value }))
+                }
                 onCitySelect={handleCitySelect}
                 placeholder="Search for a city..."
                 required
@@ -251,10 +271,13 @@ const EditTrip = () => {
                 </div>
                 <h3 className="text-xl font-bold text-[#2D2D34]">Trip Dates</h3>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="startDate" className="block text-sm font-medium text-[#2D2D34] mb-2">
+                  <label
+                    htmlFor="startDate"
+                    className="block text-sm font-medium text-[#2D2D34] mb-2"
+                  >
                     Start Date *
                   </label>
                   <input
@@ -267,9 +290,12 @@ const EditTrip = () => {
                     required
                   />
                 </div>
-                
+
                 <div>
-                  <label htmlFor="endDate" className="block text-sm font-medium text-[#2D2D34] mb-2">
+                  <label
+                    htmlFor="endDate"
+                    className="block text-sm font-medium text-[#2D2D34] mb-2"
+                  >
                     End Date *
                   </label>
                   <input
@@ -291,9 +317,11 @@ const EditTrip = () => {
                 <div className="flex items-center justify-center w-10 h-10 bg-[#FF5E5B] rounded-lg">
                   <FaRoute className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#2D2D34]">Trip Status</h3>
+                <h3 className="text-xl font-bold text-[#2D2D34]">
+                  Trip Status
+                </h3>
               </div>
-              
+
               <select
                 id="status"
                 name="status"
@@ -312,9 +340,11 @@ const EditTrip = () => {
                 <div className="flex items-center justify-center w-10 h-10 bg-[#8E6DE9] rounded-lg">
                   <FaPencilAlt className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#2D2D34]">Description</h3>
+                <h3 className="text-xl font-bold text-[#2D2D34]">
+                  Description
+                </h3>
               </div>
-              
+
               <textarea
                 id="description"
                 name="description"
@@ -334,14 +364,16 @@ const EditTrip = () => {
                 </div>
                 <h3 className="text-xl font-bold text-[#2D2D34]">Trip Image</h3>
               </div>
-              
+
               <div className="space-y-6">
                 {/* Current Image Display */}
                 {currentImageUrl && (
                   <div className="p-4 bg-white rounded-lg border border-[#DADADA]">
                     <div className="flex items-center space-x-3 mb-3">
                       <FaImage className="w-4 h-4 text-[#00BFA6]" />
-                      <p className="text-sm font-medium text-[#2D2D34]">Current Image</p>
+                      <p className="text-sm font-medium text-[#2D2D34]">
+                        Current Image
+                      </p>
                     </div>
                     <img
                       src={currentImageUrl}
@@ -350,11 +382,15 @@ const EditTrip = () => {
                     />
                   </div>
                 )}
-                
+
                 {/* New Image Upload */}
                 <div>
-                  <label htmlFor="image" className="block text-sm font-medium text-[#2D2D34] mb-3">
-                    Upload New Image (Optional - leave empty to keep current image)
+                  <label
+                    htmlFor="image"
+                    className="block text-sm font-medium text-[#2D2D34] mb-3"
+                  >
+                    Upload New Image (Optional - leave empty to keep current
+                    image)
                   </label>
                   <input
                     type="file"
@@ -365,13 +401,15 @@ const EditTrip = () => {
                     className="w-full px-4 py-3 border border-[#DADADA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BFA6] focus:border-[#00BFA6] transition-all duration-200 text-[#2D2D34] bg-white cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#00BFA6] file:text-white hover:file:bg-[#00BFA6]/90"
                   />
                 </div>
-                
+
                 {/* New Image Preview */}
                 {formData.image && (
                   <div className="p-4 bg-white rounded-lg border border-[#DADADA]">
                     <div className="flex items-center space-x-3 mb-3">
                       <FaCamera className="w-4 h-4 text-[#8E6DE9]" />
-                      <p className="text-sm font-medium text-[#2D2D34]">New Image Preview</p>
+                      <p className="text-sm font-medium text-[#2D2D34]">
+                        New Image Preview
+                      </p>
                     </div>
                     <img
                       src={imagePreview}
@@ -391,9 +429,9 @@ const EditTrip = () => {
                 className="flex-1 flex items-center justify-center space-x-3 bg-[#8E6DE9] text-white py-4 px-6 rounded-xl hover:bg-[#8E6DE9]/90 focus:outline-none focus:ring-2 focus:ring-[#8E6DE9] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium text-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <FaSave className="w-5 h-5" />
-                <span>{isSubmitting ? 'Updating Trip...' : 'Update Trip'}</span>
+                <span>{isSubmitting ? "Updating Trip..." : "Update Trip"}</span>
               </button>
-              
+
               <button
                 type="button"
                 onClick={handleCancel}

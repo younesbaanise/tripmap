@@ -60,7 +60,7 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
-              
+
               <Route
                 path="/add-trip"
                 element={
@@ -69,7 +69,7 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
-              
+
               <Route
                 path="/edit-trip/:tripId"
                 element={
@@ -78,7 +78,7 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
-              
+
               <Route
                 path="/map"
                 element={

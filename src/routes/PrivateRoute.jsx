@@ -1,5 +1,5 @@
-import { Navigate } from 'react-router';
-import { useAuth } from '../contexts/AuthContext';
+import { Navigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, isEmailVerified } = useAuth();

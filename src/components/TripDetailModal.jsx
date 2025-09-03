@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useTrips } from '../contexts/TripContext';
-import { toast } from 'react-hot-toast';
-import { extractCityName } from '../utils/placeUtils';
-import { 
-  FaTimes, 
-  FaMapMarkerAlt, 
-  FaCalendarAlt, 
-  FaClock, 
-  FaEdit, 
-  FaTrash, 
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useTrips } from "../contexts/TripContext";
+import { toast } from "react-hot-toast";
+import { extractCityName } from "../utils/placeUtils";
+import {
+  FaTimes,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaClock,
+  FaEdit,
+  FaTrash,
   FaImage,
   FaGlobeAmericas,
-  FaRoute
+  FaRoute,
 } from "react-icons/fa";
 
 const TripDetailModal = ({ trip, isOpen, onClose }) => {
@@ -34,34 +34,34 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
   const handleDelete = async () => {
     try {
       await deleteTrip(trip.id);
-      toast.success('Trip deleted successfully!');
+      toast.success("Trip deleted successfully!");
       onClose();
     } catch (error) {
-      console.error('Error deleting trip:', error);
-      toast.error('Failed to delete trip. Please try again.');
+      console.error("Error deleting trip:", error);
+      toast.error("Failed to delete trip. Please try again.");
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getStatusColor = (status) => {
-    if (status === 'Visited') {
+    if (status === "Visited") {
       return {
-        bg: 'bg-[#00BFA6]',
-        text: 'text-white',
-        border: 'border-[#00BFA6]'
+        bg: "bg-[#00BFA6]",
+        text: "text-white",
+        border: "border-[#00BFA6]",
       };
     } else {
       return {
-        bg: 'bg-[#8E6DE9]',
-        text: 'text-white',
-        border: 'border-[#8E6DE9]'
+        bg: "bg-[#8E6DE9]",
+        text: "text-white",
+        border: "border-[#8E6DE9]",
       };
     }
   };
@@ -87,7 +87,7 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
@@ -101,19 +101,23 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
                   <FaGlobeAmericas className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold text-[#2D2D34]">{extractCityName(trip.placeName)}</h2>
+                  <h2 className="text-3xl font-bold text-[#2D2D34]">
+                    {extractCityName(trip.placeName)}
+                  </h2>
                   <p className="text-[#6B6B70] text-sm">Travel Adventure</p>
                 </div>
               </div>
-              
+
               {/* Status Badge */}
               <div className="inline-block">
-                <span className={`px-4 py-2 text-sm font-semibold rounded-full shadow-lg ${statusColors.bg} ${statusColors.text}`}>
+                <span
+                  className={`px-4 py-2 text-sm font-semibold rounded-full shadow-lg ${statusColors.bg} ${statusColors.text}`}
+                >
                   {trip.status}
                 </span>
               </div>
             </div>
-            
+
             <button
               onClick={onClose}
               className="flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-white text-[#6B6B70] hover:text-[#2D2D34] rounded-full shadow-lg transition-all duration-200 transform hover:scale-110 cursor-pointer"
@@ -139,7 +143,9 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
             ) : (
               <div className="w-full h-80 bg-gradient-to-br from-[#F6F5F3] to-[#DADADA] rounded-xl flex flex-col items-center justify-center shadow-lg">
                 <FaImage className="w-24 h-24 text-[#6B6B70] opacity-50 mb-4" />
-                <p className="text-[#6B6B70] text-lg font-medium">No Image Available</p>
+                <p className="text-[#6B6B70] text-lg font-medium">
+                  No Image Available
+                </p>
               </div>
             )}
           </div>
@@ -154,31 +160,39 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
                 </div>
                 <h3 className="text-xl font-bold text-[#2D2D34]">Trip Dates</h3>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-[#DADADA]">
                   <div className="flex items-center space-x-3">
                     <FaRoute className="w-4 h-4 text-[#00BFA6]" />
-                    <span className="text-[#2D2D34] font-medium">Start Date</span>
+                    <span className="text-[#2D2D34] font-medium">
+                      Start Date
+                    </span>
                   </div>
-                  <span className="text-[#6B6B70] font-semibold">{formatDate(trip.startDate)}</span>
+                  <span className="text-[#6B6B70] font-semibold">
+                    {formatDate(trip.startDate)}
+                  </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-[#DADADA]">
                   <div className="flex items-center space-x-3">
                     <FaRoute className="w-4 h-4 text-[#8E6DE9]" />
                     <span className="text-[#2D2D34] font-medium">End Date</span>
                   </div>
-                  <span className="text-[#6B6B70] font-semibold">{formatDate(trip.endDate)}</span>
+                  <span className="text-[#6B6B70] font-semibold">
+                    {formatDate(trip.endDate)}
+                  </span>
                 </div>
-                
+
                 {duration > 0 && (
                   <div className="flex items-center justify-between p-3 bg-gradient-to-r from-[#00BFA6] to-[#8E6DE9] rounded-lg text-white">
                     <div className="flex items-center space-x-3">
                       <FaClock className="w-4 h-4" />
                       <span className="font-medium">Duration</span>
                     </div>
-                    <span className="font-bold">{duration} day{duration !== 1 ? 's' : ''}</span>
+                    <span className="font-bold">
+                      {duration} day{duration !== 1 ? "s" : ""}
+                    </span>
                   </div>
                 )}
               </div>
@@ -190,25 +204,35 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
                 <div className="flex items-center justify-center w-10 h-10 bg-[#8E6DE9] rounded-lg">
                   <FaMapMarkerAlt className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#2D2D34]">Trip Information</h3>
+                <h3 className="text-xl font-bold text-[#2D2D34]">
+                  Trip Information
+                </h3>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="p-3 bg-white rounded-lg border border-[#DADADA]">
                   <div className="flex items-center space-x-3 mb-2">
                     <FaMapMarkerAlt className="w-4 h-4 text-[#8E6DE9]" />
-                    <span className="text-[#2D2D34] font-medium">Destination</span>
+                    <span className="text-[#2D2D34] font-medium">
+                      Destination
+                    </span>
                   </div>
-                  <p className="text-[#6B6B70] text-sm leading-relaxed">{trip.placeName}</p>
+                  <p className="text-[#6B6B70] text-sm leading-relaxed">
+                    {trip.placeName}
+                  </p>
                 </div>
-                
+
                 {trip.createdAt && (
                   <div className="p-3 bg-white rounded-lg border border-[#DADADA]">
                     <div className="flex items-center space-x-3 mb-2">
                       <FaClock className="w-4 h-4 text-[#00BFA6]" />
-                      <span className="text-[#2D2D34] font-medium">Created</span>
+                      <span className="text-[#2D2D34] font-medium">
+                        Created
+                      </span>
                     </div>
-                    <p className="text-[#6B6B70] text-sm">{formatDate(trip.createdAt)}</p>
+                    <p className="text-[#6B6B70] text-sm">
+                      {formatDate(trip.createdAt)}
+                    </p>
                   </div>
                 )}
               </div>
@@ -222,10 +246,14 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
                 <div className="flex items-center justify-center w-10 h-10 bg-[#FF5E5B] rounded-lg">
                   <FaGlobeAmericas className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#2D2D34]">Description</h3>
+                <h3 className="text-xl font-bold text-[#2D2D34]">
+                  Description
+                </h3>
               </div>
               <div className="bg-white rounded-lg p-4 border border-[#DADADA]">
-                <p className="text-[#6B6B70] leading-relaxed text-base">{trip.description}</p>
+                <p className="text-[#6B6B70] leading-relaxed text-base">
+                  {trip.description}
+                </p>
               </div>
             </div>
           )}
@@ -245,7 +273,7 @@ const TripDetailModal = ({ trip, isOpen, onClose }) => {
               className="flex-1 flex items-center justify-center space-x-3 bg-[#FF5E5B] text-white py-4 px-6 rounded-xl hover:bg-[#FF5E5B]/90 focus:outline-none focus:ring-2 focus:ring-[#FF5E5B] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium text-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               <FaTrash className="w-5 h-5" />
-              <span>{loading ? 'Deleting...' : 'Delete Trip'}</span>
+              <span>{loading ? "Deleting..." : "Delete Trip"}</span>
             </button>
           </div>
         </div>

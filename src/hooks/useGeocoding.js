@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 export const useGeocoding = () => {
   const [suggestions, setSuggestions] = useState([]);
@@ -16,30 +16,32 @@ export const useGeocoding = () => {
 
     try {
       const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=${import.meta.env.VITE_OPENCAGE_API_KEY}&limit=5`
+        `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
+          query
+        )}&key=${import.meta.env.VITE_OPENCAGE_API_KEY}&limit=5`
       );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch city suggestions');
+        throw new Error("Failed to fetch city suggestions");
       }
 
       const data = await response.json();
-      
+
       if (data.results && data.results.length > 0) {
-        const citySuggestions = data.results.map(result => ({
-          id: result.geometry.lat + ',' + result.geometry.lng,
+        const citySuggestions = data.results.map((result) => ({
+          id: result.geometry.lat + "," + result.geometry.lng,
           placeName: result.formatted,
           lat: result.geometry.lat,
           lng: result.geometry.lng,
-          displayName: result.formatted
+          displayName: result.formatted,
         }));
         setSuggestions(citySuggestions);
       } else {
         setSuggestions([]);
       }
     } catch (err) {
-      console.error('Geocoding error:', err);
-      setError('Failed to fetch city suggestions');
+      console.error("Geocoding error:", err);
+      setError("Failed to fetch city suggestions");
       setSuggestions([]);
     } finally {
       setLoading(false);
@@ -56,6 +58,6 @@ export const useGeocoding = () => {
     loading,
     error,
     searchCities,
-    clearSuggestions
+    clearSuggestions,
   };
 };

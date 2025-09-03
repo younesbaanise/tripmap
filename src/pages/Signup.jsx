@@ -7,17 +7,21 @@ import {
 import { auth, googleProvider } from "../services/firebase";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
-import { 
-  FaUser, 
-  FaEnvelope, 
-  FaLock, 
-  FaEye, 
-  FaEyeSlash, 
+import {
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
   FaGlobeAmericas,
   FaMapMarkedAlt,
   FaCamera,
-  FaCalendarAlt
+  FaCalendarAlt,
 } from "react-icons/fa";
+import tripmapLogo from "../assets/tripmap-logo.png";
+
+// Fallback for mobile/tablet compatibility
+const logoPath = tripmapLogo || "/src/assets/tripmap-logo.png";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -172,21 +176,28 @@ const Signup = () => {
             <div className="absolute bottom-20 right-20 w-24 h-24 bg-white rounded-full"></div>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full"></div>
           </div>
-          
+
           <div className="max-w-lg mx-auto text-center relative z-10">
             {/* App Logo/Icon */}
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6 border border-white/30">
-                <FaGlobeAmericas className="w-10 h-10 text-white" />
+              <div className="inline-flex items-center justify-center mb-6">
+                <img
+                  src={logoPath}
+                  alt="TripMap Logo"
+                  className="w-20 h-20 object-contain rounded-lg shadow-lg"
+                  onError={(e) => {
+                    e.target.src = "/src/assets/tripmap-logo.png";
+                  }}
+                />
               </div>
               <h1 className="text-4xl font-bold mb-4 text-white">TripMap</h1>
             </div>
-            
+
             {/* App Description */}
             <p className="text-xl font-medium mb-8 text-white/90">
               Share your travel memories & plan future trips
             </p>
-            
+
             {/* Feature Icons */}
             <div className="grid grid-cols-3 gap-6 mb-8">
               <div className="text-center">
@@ -216,11 +227,22 @@ const Signup = () => {
           <div className="w-full max-w-md">
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#00BFA6] to-[#8E6DE9] rounded-full mb-4">
-                <FaGlobeAmericas className="w-8 h-8 text-white" />
+              <div className="inline-flex items-center justify-center mb-4">
+                <img
+                  src={logoPath}
+                  alt="TripMap Logo"
+                  className="w-16 h-16 object-contain rounded-lg shadow-lg"
+                  onError={(e) => {
+                    e.target.src = "/src/assets/tripmap-logo.png";
+                  }}
+                />
               </div>
-              <h1 className="text-3xl font-bold text-[#2D2D34] mb-2">TripMap</h1>
-              <p className="text-[#6B6B70]">Share your travel memories & plan future trips</p>
+              <h1 className="text-3xl font-bold text-[#2D2D34] mb-2">
+                TripMap
+              </h1>
+              <p className="text-[#6B6B70]">
+                Share your travel memories & plan future trips
+              </p>
             </div>
 
             {/* Form Header */}
@@ -358,7 +380,7 @@ const Signup = () => {
                 type="button"
                 onClick={handleGoogleSignUp}
                 disabled={googleLoading}
-                className="w-full flex justify-center items-center py-3 px-4 border border-[#DADADA] rounded-lg shadow-sm text-sm font-medium text-[#2D2D34] bg-white hover:bg-[#F6F5F3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+                className="w-full cursor-pointer flex justify-center items-center py-3 px-4 border border-[#DADADA] rounded-lg shadow-sm text-sm font-medium text-[#2D2D34] bg-white hover:bg-[#F6F5F3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5E5B] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02]"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path
@@ -388,7 +410,7 @@ const Signup = () => {
                   <button
                     type="button"
                     onClick={() => navigate("/login")}
-                    className="font-medium text-[#FF5E5B] hover:text-[#FF5E5B]/80 transition-colors"
+                    className="font-medium text-[#FF5E5B] hover:text-[#FF5E5B]/80 transition-colors cursor-pointer"
                   >
                     Sign in here
                   </button>

@@ -7,8 +7,8 @@ import {
   FaLock,
   FaEnvelope,
   FaArrowLeft,
-  FaShieldAlt,
   FaCheckCircle,
+  FaShieldAlt,
 } from "react-icons/fa";
 
 const ForgetPassword = () => {
@@ -99,18 +99,24 @@ const ForgetPassword = () => {
       <div className="max-w-md w-full mx-auto">
         {/* Enhanced Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#8E6DE9] to-[#00BFA6] rounded-2xl shadow-lg">
-              <FaShieldAlt className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-[#2D2D34]">
-                Reset Password
-              </h1>
-              <p className="text-lg text-[#6B6B70]">
-                Get back to your adventures
-              </p>
-            </div>
+          {/* Mobile: Smaller title and subtitle */}
+          <div className="md:hidden mb-6">
+            <h1 className="text-3xl font-bold text-[#2D2D34] mb-3">
+              Reset Password
+            </h1>
+            <p className="text-base text-[#6B6B70]">
+              Get back to your adventures
+            </p>
+          </div>
+
+          {/* Tablet and Desktop: Larger title and subtitle */}
+          <div className="hidden md:block mb-6">
+            <h1 className="text-4xl font-bold text-[#2D2D34] mb-3">
+              Reset Password
+            </h1>
+            <p className="text-lg text-[#6B6B70]">
+              Get back to your adventures
+            </p>
           </div>
         </div>
 
@@ -195,7 +201,6 @@ const ForgetPassword = () => {
                 </div>
               ) : (
                 <div className="flex items-center justify-center space-x-3">
-                  <FaShieldAlt className="w-5 h-5" />
                   <span>Send Reset Link</span>
                 </div>
               )}

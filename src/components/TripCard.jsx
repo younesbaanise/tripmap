@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { extractCityName } from '../utils/placeUtils';
-import { 
-  FaEdit, 
-  FaCalendarAlt, 
-  FaMapMarkerAlt, 
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { extractCityName } from "../utils/placeUtils";
+import {
+  FaEdit,
+  FaCalendarAlt,
+  FaMapMarkerAlt,
   FaEye,
-  FaImage
+  FaImage,
 } from "react-icons/fa";
 
 const TripCard = ({ trip, onOpenModal }) => {
@@ -33,25 +33,25 @@ const TripCard = ({ trip, onOpenModal }) => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getStatusColor = (status) => {
-    if (status === 'Visited') {
+    if (status === "Visited") {
       return {
-        bg: 'bg-[#00BFA6]',
-        text: 'text-white',
-        border: 'border-[#00BFA6]'
+        bg: "bg-[#00BFA6]",
+        text: "text-white",
+        border: "border-[#00BFA6]",
       };
     } else {
       return {
-        bg: 'bg-[#8E6DE9]',
-        text: 'text-white',
-        border: 'border-[#8E6DE9]'
+        bg: "bg-[#8E6DE9]",
+        text: "text-white",
+        border: "border-[#8E6DE9]",
       };
     }
   };
@@ -59,7 +59,7 @@ const TripCard = ({ trip, onOpenModal }) => {
   const statusColors = getStatusColor(trip.status);
 
   return (
-    <div 
+    <div
       onClick={handleCardClick}
       className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-[#DADADA] overflow-hidden transform hover:scale-[1.02] hover:-translate-y-1"
     >
@@ -73,19 +73,17 @@ const TripCard = ({ trip, onOpenModal }) => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00BFA6]"></div>
               </div>
             )}
-            
+
             {/* Image */}
             <img
               src={trip.imageUrl}
               alt={trip.placeName}
               className={`w-full h-full object-cover transition-opacity duration-300 ${
-                imageLoading ? 'opacity-0' : 'opacity-100'
+                imageLoading ? "opacity-0" : "opacity-100"
               }`}
               onError={handleImageError}
               onLoad={handleImageLoad}
             />
-            
-
           </>
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-[#6B6B70]">
@@ -93,10 +91,12 @@ const TripCard = ({ trip, onOpenModal }) => {
             <p className="text-sm opacity-70">No Image</p>
           </div>
         )}
-        
+
         {/* Status Badge - Positioned on top right */}
         <div className="absolute top-3 right-3">
-          <span className={`px-3 py-1.5 text-xs font-semibold rounded-full shadow-lg ${statusColors.bg} ${statusColors.text}`}>
+          <span
+            className={`px-3 py-1.5 text-xs font-semibold rounded-full shadow-lg ${statusColors.bg} ${statusColors.text}`}
+          >
             {trip.status}
           </span>
         </div>
@@ -120,13 +120,17 @@ const TripCard = ({ trip, onOpenModal }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <FaCalendarAlt className="w-4 h-4 text-[#00BFA6]" />
-              <span className="text-sm font-medium text-[#2D2D34]">Duration</span>
+              <span className="text-sm font-medium text-[#2D2D34]">
+                Duration
+              </span>
             </div>
             <span className="text-xs text-[#6B6B70] bg-white px-2 py-1 rounded-full">
-              {trip.startDate && trip.endDate ? 
-                `${Math.ceil((new Date(trip.endDate) - new Date(trip.startDate)) / (1000 * 60 * 60 * 24))} days` : 
-                'N/A'
-              }
+              {trip.startDate && trip.endDate
+                ? `${Math.ceil(
+                    (new Date(trip.endDate) - new Date(trip.startDate)) /
+                      (1000 * 60 * 60 * 24)
+                  )} days`
+                : "N/A"}
             </span>
           </div>
           <div className="mt-2 text-sm text-[#2D2D34]">
@@ -139,9 +143,11 @@ const TripCard = ({ trip, onOpenModal }) => {
         {/* Description Section - Handles different lengths gracefully */}
         {trip.description && (
           <div className="mb-4">
-            <p className={`text-sm text-[#6B6B70] leading-relaxed ${
-              trip.description.length > 100 ? 'line-clamp-3' : 'line-clamp-2'
-            }`}>
+            <p
+              className={`text-sm text-[#6B6B70] leading-relaxed ${
+                trip.description.length > 100 ? "line-clamp-3" : "line-clamp-2"
+              }`}
+            >
               {trip.description}
             </p>
             {trip.description.length > 100 && (
@@ -155,13 +161,14 @@ const TripCard = ({ trip, onOpenModal }) => {
         {/* Actions Section */}
         <div className="flex justify-between items-center pt-3 border-t border-[#DADADA]">
           <div className="text-xs text-[#6B6B70]">
-            Created {new Date(trip.createdAt).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric'
+            Created{" "}
+            {new Date(trip.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
             })}
           </div>
-          
+
           <button
             onClick={handleEditClick}
             className="flex items-center space-x-2 px-4 py-2 bg-[#8E6DE9] text-white rounded-lg hover:bg-[#8E6DE9]/90 focus:outline-none focus:ring-2 focus:ring-[#8E6DE9] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-md text-sm font-medium cursor-pointer"

@@ -5,11 +5,11 @@
  */
 
 export const extractCityName = (placeName) => {
-  if (!placeName || typeof placeName !== 'string') {
-    return placeName || '';
+  if (!placeName || typeof placeName !== "string") {
+    return placeName || "";
   }
 
   // Split by comma and take the first part (city name)
-  const city = placeName.split(',')[0].trim();
+  const city = placeName.split(",")[0].trim();
   return city;
 };

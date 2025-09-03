@@ -14,6 +14,7 @@ import {
   FaEdit,
   FaEye,
 } from "react-icons/fa";
+
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -203,92 +204,104 @@ const MapPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F5F3] p-6">
+    <div className="min-h-screen bg-[#F6F5F3] p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Enhanced Header with Navigation */}
-        <div className="bg-white rounded-2xl shadow-xl border border-[#DADADA] p-8 mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
-            <div className="flex-1">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#00BFA6] to-[#8E6DE9] rounded-2xl shadow-lg">
-                  <FaMap className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-4xl font-bold text-[#2D2D34]">
-                    Travel Map
-                  </h1>
-                  <p className="text-lg text-[#6B6B70]">
-                    Explore your adventures around the world
-                  </p>
-                </div>
+        <div className="bg-white rounded-2xl shadow-xl border border-[#DADADA] p-6 sm:p-8 mb-6 sm:mb-8">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-4 sm:gap-6">
+            <div className="flex-1 w-full">
+              {/* Mobile: Smaller title and subtitle */}
+              <div className="md:hidden mb-4 sm:mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold text-[#2D2D34] mb-2 sm:mb-3 text-center">
+                  Travel Map
+                </h1>
+                <p className="text-sm sm:text-base text-[#6B6B70] text-center">
+                  Explore your adventures around the world
+                </p>
+              </div>
+
+              {/* Tablet and Desktop: Larger title and subtitle */}
+              <div className="hidden md:block mb-6">
+                <h1 className="text-4xl font-bold text-[#2D2D34] mb-3">
+                  Travel Map
+                </h1>
+                <p className="text-lg text-[#6B6B70]">
+                  Explore your adventures around the world
+                </p>
               </div>
 
               {/* Trip Statistics */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-[#F6F5F3] rounded-xl p-4 border border-[#DADADA] hover:shadow-md transition-all duration-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center justify-center w-10 h-10 bg-[#00BFA6] rounded-lg">
-                      <FaGlobeAmericas className="w-5 h-5 text-white" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="bg-[#F6F5F3] rounded-xl p-3 sm:p-4 border border-[#DADADA] hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-[#00BFA6] rounded-lg">
+                      <FaGlobeAmericas className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-[#2D2D34]">
+                      <p className="text-xl sm:text-2xl font-bold text-[#2D2D34]">
                         {tripsWithCoordinates.length}
                       </p>
-                      <p className="text-sm text-[#6B6B70]">Mapped Trips</p>
+                      <p className="text-xs sm:text-sm text-[#6B6B70]">
+                        Mapped Trips
+                      </p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-[#F6F5F3] rounded-xl p-4 border border-[#DADADA] hover:shadow-md transition-all duration-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center justify-center w-10 h-10 bg-[#8E6DE9] rounded-lg">
-                      <FaRoute className="w-5 h-5 text-white" />
+                <div className="bg-[#F6F5F3] rounded-xl p-3 sm:p-4 border border-[#DADADA] hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-[#8E6DE9] rounded-lg">
+                      <FaRoute className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-[#2D2D34]">
+                      <p className="text-xl sm:text-2xl font-bold text-[#2D2D34]">
                         {
                           trips.filter(
                             (t) => t.status === "Future Trip" && t.lat && t.lng
                           ).length
                         }
                       </p>
-                      <p className="text-sm text-[#6B6B70]">Planned</p>
+                      <p className="text-xs sm:text-sm text-[#6B6B70]">
+                        Planned
+                      </p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-[#F6F5F3] rounded-xl p-4 border border-[#DADADA] hover:shadow-md transition-all duration-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center justify-center w-10 h-10 bg-[#FF5E5B] rounded-lg">
-                      <FaCalendarAlt className="w-5 h-5 text-white" />
+                <div className="bg-[#F6F5F3] rounded-xl p-3 sm:p-4 border border-[#DADADA] hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-[#FF5E5B] rounded-lg">
+                      <FaCalendarAlt className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-[#2D2D34]">
+                      <p className="text-xl sm:text-2xl font-bold text-[#2D2D34]">
                         {
                           trips.filter(
                             (t) => t.status === "Visited" && t.lat && t.lng
                           ).length
                         }
                       </p>
-                      <p className="text-sm text-[#6B6B70]">Visited</p>
+                      <p className="text-xs sm:text-sm text-[#6B6B70]">
+                        Visited
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Navigation Buttons - Aligned to the right */}
-            <div className="flex flex-col sm:flex-row gap-3 lg:ml-8">
+            {/* Navigation Buttons - Responsive layout */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto mt-4 sm:mt-0">
               <button
                 onClick={() => navigate("/trips")}
-                className="flex items-center space-x-3 bg-[#F6F5F3] hover:bg-[#DADADA] text-[#2D2D34] px-6 py-3 rounded-xl border border-[#DADADA] transition-all duration-200 transform hover:scale-105 cursor-pointer shadow-sm"
+                className="flex items-center justify-center space-x-2 sm:space-x-3 bg-[#F6F5F3] hover:bg-[#DADADA] text-[#2D2D34] px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-[#DADADA] transition-all duration-200 transform hover:scale-105 cursor-pointer shadow-sm text-sm sm:text-base"
               >
-                <FaArrowLeft className="w-4 h-4" />
+                <FaArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>Back to Trips</span>
               </button>
               <button
                 onClick={() => navigate("/add-trip")}
-                className="flex items-center space-x-3 bg-[#FF5E5B] text-white px-6 py-3 rounded-xl hover:bg-[#FF5E5B]/90 transition-all duration-200 transform hover:scale-105 shadow-lg cursor-pointer"
+                className="flex items-center justify-center space-x-2 sm:space-x-3 bg-[#FF5E5B] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-[#FF5E5B]/90 transition-all duration-200 transform hover:scale-105 shadow-lg cursor-pointer text-sm sm:text-base"
               >
-                <FaPlus className="w-4 h-4" />
+                <FaPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>Add New Trip</span>
               </button>
             </div>
@@ -327,8 +340,8 @@ const MapPage = () => {
 
           {/* Map */}
           <div
-            className="w-full h-[700px] relative"
-            style={{ height: "700px", zIndex: 1 }}
+            className="w-full h-[500px] relative"
+            style={{ height: "500px", zIndex: 1 }}
           >
             <MapContainer
               center={mapCenter}
@@ -427,7 +440,7 @@ const MapPage = () => {
           <div className="mt-8 bg-white rounded-2xl shadow-xl border border-[#DADADA] p-12 text-center">
             <div className="max-w-md mx-auto">
               <div className="w-24 h-24 bg-gradient-to-br from-[#00BFA6] to-[#8E6DE9] rounded-full flex items-center justify-center mx-auto mb-6">
-                <FaGlobeAmericas className="w-12 h-12 text-white" />
+                <FaMap className="w-12 h-12 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-[#2D2D34] mb-4">
                 No trips on the map yet
